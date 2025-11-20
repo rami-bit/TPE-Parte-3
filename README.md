@@ -77,7 +77,6 @@ GET ../api/noticias?orderby=contenido&order=desc
 | `page`      | `int` |Required.Pagina que se quiere ver|
 | `limit`|`int` |Required. maximo de noticias por páginas|
 
-Se usa tambien el `offset` de tipo `int`que se calcula a partir de page y limit para hacer la query en el modelo (no se pasa por url)
 
 >📌Nota: El offset se calcula automáticamente a partir de page y limit en el backend. No debe enviarse por URL. El paginado solo se aplica si se pasa por query el par `limit` y `page`.Tambien se puede combinar con el filtro y ordenamiento por campos. 
 
