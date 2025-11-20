@@ -14,7 +14,7 @@ class NoticiaController
 
     function getAll($request, $response)
     {
-        $page  = isset($request->query->page) && (is_numeric($request->query->page))  ?  $request->query->page  : null;
+        $page  = isset($request->query->page) && (is_numeric($request->query->page)) && $request->query->page > 0  ?  $request->query->page  : null;
         $limit = isset($request->query->limit) && (is_numeric($request->query->limit)) ? $request->query->limit : null;
         $offset = ($page && $limit) ? ($page - 1) * $limit : null;
         $game = isset($request->query->game) && (is_numeric($request->query->game)) ? $request->query->game : null;
