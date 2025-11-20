@@ -35,7 +35,7 @@ class NoticiaController
             } else {
                 return $response->json('Error: parámetros de orden inválidos', 400);
             }
-        } else if (($hasOrderBy && !$hasOrder) || (!$hasOrder && $hasOrder)) {
+        } else if (($hasOrderBy && !$hasOrder) || (!$hasOrderBy && $hasOrder)) {
             return $response->json('Debés enviar ambos parámetros: orderby y order', 400);
         } else {
             $campo = null;
