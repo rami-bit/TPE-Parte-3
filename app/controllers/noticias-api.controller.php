@@ -23,8 +23,11 @@ class NoticiaController
             return $response->json('ERROR: El limite no puede ser menor o igual a 0', 400);
         }
 
+        $hasOrderBy = isset($request->query->orderby);
+        $hasOrder = isset($request->query->order);
+
         //Checo si el campo y el orden estan seteados
-        if (isset($request->query->orderby) && isset($request->query->order)) {
+        if ($hasOrderBy && $hasOrder) {
             //si son validos
             if ($this->checkParams($request->query->orderby, $request->query->order)) {
                 $campo = $request->query->orderby;
@@ -32,6 +35,8 @@ class NoticiaController
             } else {
                 return $response->json('Error: parámetros de orden inválidos', 400);
             }
+        } else if (($hasOrderBy && !$hasOrder) || (!$hasOrder && $hasOrder)) {
+            return $response->json('Debés enviar ambos parámetros: orderby y order', 400);
         } else {
             $campo = null;
             $order = null;
@@ -51,7 +56,7 @@ class NoticiaController
 
         $campo = strtolower($campo);
         $campos = $this->modelNoticia->getCampos();
-        foreach($campos as $c) {
+        foreach ($campos as $c) {
             if ($campo === $c->COLUMN_NAME) {
                 return true;
             }
