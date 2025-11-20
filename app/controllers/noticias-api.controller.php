@@ -13,22 +13,31 @@ class NoticiaController
     }
 
     function getAll($request, $response)
-    {   
+    {
         $page  = isset($request->query->page) && (is_numeric($request->query->page))  ?  $request->query->page  : null;
         $limit = isset($request->query->limit) && (is_numeric($request->query->limit)) ? $request->query->limit : null;
         $offset = ($page && $limit) ? ($page - 1) * $limit : null;
         $game = isset($request->query->game) && (is_numeric($request->query->game)) ? $request->query->game : null;
 
-        //Checo si el campo y el orden tienen 
-        if (isset($request->query->orderby) &&$order = isset($request->query->order) && $this->checkParams($request->query->orderby, $request->query->order)) {
-            $campo = $request->query->orderby;
-            $order = $request->query->order;
-        }else {
+        if ($limit !== null && $limit <= 0) {
+            return $response->json('ERROR: El limite no puede ser menor o igual a 0', 400);
+        }
+
+        //Checo si el campo y el orden estan seteados
+        if (isset($request->query->orderby) && isset($request->query->order)) {
+            //si son validos
+            if ($this->checkParams($request->query->orderby, $request->query->order)) {
+                $campo = $request->query->orderby;
+                $order = $request->query->order;
+            } else {
+                return $response->json('Error: parámetros de orden inválidos', 400);
+            }
+        } else {
             $campo = null;
             $order = null;
         }
 
-        $noticias = $this->modelNoticia->getAll($limit,$offset,$game,$campo,$order);
+        $noticias = $this->modelNoticia->getAll($limit, $offset, $game, $campo, $order);
         return $response->json($noticias, 200);
     }
 
@@ -36,18 +45,20 @@ class NoticiaController
     private function checkParams($campo, $order)
     {
         $order = strtolower($order);
-        if ($order != 'asc' && $order != 'desc') {
+        if ($order !== 'asc' && $order !== 'desc') {
             return false;
         }
 
         $campo = strtolower($campo);
-
         $campos = $this->modelNoticia->getCampos();
-        if (in_array($campo, $campos)) {
-            return false;
+        foreach($campos as $c) {
+            if ($campo === $c->COLUMN_NAME) {
+                return true;
+            }
         }
-        return true;
+        return false;
     }
+
 
 
     function get($request, $response)

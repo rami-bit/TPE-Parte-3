@@ -7,12 +7,12 @@ class ModelNoticias extends Model
         $setencia = "Select * from noticia ";
         $arrExec=[];
 
-        if ($game != null) {
+        if ($game !== null) {
             $setencia .= " where seccion_id = ?";
             $arrExec[] = $game;
         }
 
-        if($campo != null && $order != null) { 
+        if($campo !== null && $order !== null) { 
             $setencia .= " Order BY $campo $order";
         }
 
@@ -23,22 +23,12 @@ class ModelNoticias extends Model
         $query = $this->db->prepare($setencia);
         $query->execute($arrExec);
         return $query->fetchAll(PDO::FETCH_OBJ);
-
     }
 
     public function get($id)
     {
         $query = $this->db->prepare('SELECT * FROM noticia WHERE id = ?');
         $query->execute([$id]);
-        $noticia = $query->fetch(PDO::FETCH_OBJ);
-        return $noticia;
-    }
-
-    public function Delete($id = null)
-    {
-        $query = $this->db->prepare('DELETE FROM noticia WHERE id = ?');
-        $query->execute([$id]);
-
         $noticia = $query->fetch(PDO::FETCH_OBJ);
         return $noticia;
     }
